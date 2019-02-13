@@ -1,0 +1,36 @@
+.vn-gantt {
+  display: block;
+  border: 1px solid gray; }
+  .vn-gantt .vn-root {
+    display: flex;
+    flex-direction: column;
+    overflow-x: scroll; }
+  .vn-gantt .vn-head {
+    display: flex;
+    flex-direction: row;
+    width: 100%; }
+  .vn-gantt .vn-body {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    background: blue; }
+  .vn-gantt .vn-tasks {
+    min-width: 111px;
+    background: whitesmoke; }
+  .vn-gantt .vn-month,
+  .vn-gantt .vn-week,
+  .vn-gantt .vn-day {
+    flex: 1 0 auto; }
+    .vn-gantt .vn-month .vn-title,
+    .vn-gantt .vn-week .vn-title,
+    .vn-gantt .vn-day .vn-title {
+      display: block;
+      padding: 5px;
+      border-bottom: 1px solid gray;
+      border-left: 1px solid gray; }
+    .vn-gantt .vn-month .vn-childs,
+    .vn-gantt .vn-week .vn-childs,
+    .vn-gantt .vn-day .vn-childs {
+      display: flex;
+      flex-direction: row; }

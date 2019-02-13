@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="/node_modules/moment/moment.js"></script>
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="/node_modules/systemjs/dist/system.js"></script>
+    <script src="/node_modules/tuna-jslinq/dist/tuna-JSLinq.js"></script>
+
+    <link rel="stylesheet" href="./dist/tuna-jsgantt.css">
+    <script src="/dist/tuna-jsgantt.js"></script>
+    <script>
+        function onload() {
+            var options = {
+                data: createDummyData(),
+                range: {
+                    end: moment().add(5, "year"),
+                    start: moment().add(-5, "year"),
+                }
+            };
+
+            var gantt = new tuna.gantt.JSGantt("#container", options);
+            gantt.render();
+
+            function createDummyData() {
+                var result = [];
+                for (var i = 0; i < 10; i++) {
+                    const item = {
+                        id: i,
+                        items: []
+                    };
+                    result.push(item);
+                    for (let u = 0; u < 100; u++) {
+                        item.items.push({
+                            id: u,
+                            range: {
+                                start: moment().add(i + u, "day"),
+                                end: moment().add(i + u + 3, "day")
+                            }
+                        });
+                    }
+                }
+                return result;
+            }
+        }
+    </script>
+    <style>
+        html,
+        body {
+            margin: 10px;
+            padding: 0;
+            display: block;
+            height: 100%;
+            background: #cccccc;
+        }
+
+        body {
+            padding: 20px;
+            background: white;
+        }
+    </style>
+</head>
+
+<body onload="onload()">
+    <div id="container"></div>
+</body>
+
+</html>

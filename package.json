@@ -1,0 +1,35 @@
+{
+  "name": "tuna-jsgantt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/tuna-jsgantt.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Baxterboom/tuna-jsgantt.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Baxterboom/tuna-jsgantt/issues"
+  },
+  "homepage": "https://github.com/Baxterboom/tuna-jsgantt#readme",
+  "devDependencies": {
+    "browser-sync": "^2.26.3",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-typescript": "^5.0.0",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "@types/jquery": "~2.0.46",
+    "@types/moment": "2.13.0",
+    "jquery": "~2.2.4",
+    "moment": "2.24.0",
+    "systemjs": "^2.1.1",
+    "tuna-jslinq": "https://github.com/Baxterboom/tuna-jslinq.git#improvements"
+  }
+}

@@ -1,0 +1,49 @@
+$border-color: gray !default;
+
+.vn-gantt {
+    display: block;
+    border: 1px solid $border-color;
+
+    .vn-root {
+        display: flex;
+        flex-direction: column;
+        overflow-x: scroll;
+    }
+
+    .vn-head {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .vn-body {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100%;
+        background: blue;
+    }
+
+    .vn-tasks {
+        min-width: 111px;
+        background: whitesmoke;
+    }
+
+    .vn-month,
+    .vn-week,
+    .vn-day {
+        flex: 1 0 auto;
+
+        .vn-title {
+            display: block;
+            padding: 5px;
+            border-bottom: 1px solid $border-color;
+            border-left: 1px solid $border-color;
+        }
+
+        .vn-childs {
+            display: flex;
+            flex-direction: row;
+        }
+    }
+}
