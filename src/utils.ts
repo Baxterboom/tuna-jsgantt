@@ -1,18 +1,25 @@
 module tuna.gantt {
     export class Utils {
-        static createPart(range: IRange, unit: moment.unitOfTime.DurationConstructor, displayFormat: string, classes: string, created?: (current: moment.Moment) => string[]) {
-            const result = [""];
+        static loopRange(range: IRange, unit: moment.unitOfTime.DurationConstructor, callback: (current: moment.Moment) => void) {
             const end = range.end.endOf("day");
             const current = moment(range.start).startOf("day");
 
             while (current <= end) {
+                callback(current);
+                current.add(1, unit);
+            }
+        }
+
+        static createPart(range: IRange, unit: moment.unitOfTime.DurationConstructor, displayFormat: string, created?: (current: moment.Moment) => string[]) {
+            const result = [""];
+
+            Utils.loopRange(range, unit, current => {
                 const childs = created ? created(current.clone()).join("") : "";
-                result.push(`<div class="${classes}">
+                result.push(`<div class="vn-${unit}">
                                 <div class="vn-title">${current.format(displayFormat)}</div>
                                 <div class="vn-childs">${childs}</div>
                             </div>`);
-                current.add(1, unit);
-            }
+            });
 
             return result;
         }

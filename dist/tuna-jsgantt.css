@@ -1,6 +1,8 @@
 .vn-gantt {
   display: block;
-  border: 1px solid gray; }
+  font-family: monospace, Arial, Helvetica, sans-serif;
+  border: 1px solid #eeeeee;
+  min-width: 333px; }
   .vn-gantt .vn-root {
     display: flex;
     flex-direction: column;
@@ -27,8 +29,8 @@
     .vn-gantt .vn-day .vn-title {
       display: block;
       padding: 5px;
-      border-bottom: 1px solid gray;
-      border-left: 1px solid gray; }
+      border-bottom: 1px solid #eeeeee;
+      border-left: 1px solid #eeeeee; }
     .vn-gantt .vn-month .vn-childs,
     .vn-gantt .vn-week .vn-childs,
     .vn-gantt .vn-day .vn-childs {

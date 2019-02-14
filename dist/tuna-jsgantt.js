@@ -37,14 +37,18 @@ var tuna;
                 if (view === void 0) { view = this.options.view; }
                 console.time("render " + view);
                 this.setupRange(this.options);
+                var range = this.options.range;
                 var template = gantt.views[view];
                 if (!template)
                     console.warn("JSGantt - view " + view + " does not exist");
                 var html = template.onRender(this);
+                var target = this.element.find(".vn-root:first");
                 var element = $(html);
+                var day = new gantt.ViewWorker("dist/workers/view.day.js", function (result) { return target.append(result); }, function (error) { return console.error(error); })
+                    .send({ origin: document.location.origin, start: range.start.valueOf(), end: range.end.valueOf() });
                 if (template.onMounted)
                     template.onMounted(this, element);
-                this.element.find(".vn-root:first").append(element);
+                target.append(element);
                 console.timeEnd("render " + view);
             };
             JSGantt.prototype.setupRange = function (options) {
@@ -64,41 +68,23 @@ var tuna;
 (function (tuna) {
     var gantt;
     (function (gantt) {
-        gantt.parts = {
-            days: {
-                onRender: function (instance, range, created) {
-                    return gantt.Utils.createPart(range, "day", "DD", "vn-day", created);
-                }
-            },
-            weeks: {
-                onRender: function (instance, range, created) {
-                    return gantt.Utils.createPart(range, "week", "[Week] WW", "vn-week", created);
-                }
-            },
-            months: {
-                onRender: function (instance, range, created) {
-                    return gantt.Utils.createPart(range, "month", "MMMM YYYY", "vn-month", created);
-                }
-            }
-        };
-    })(gantt = tuna.gantt || (tuna.gantt = {}));
-})(tuna || (tuna = {}));
-var tuna;
-(function (tuna) {
-    var gantt;
-    (function (gantt) {
         var Utils = /** @class */ (function () {
             function Utils() {
             }
-            Utils.createPart = function (range, unit, displayFormat, classes, created) {
-                var result = [""];
+            Utils.loopRange = function (range, unit, callback) {
                 var end = range.end.endOf("day");
                 var current = moment(range.start).startOf("day");
                 while (current <= end) {
-                    var childs = created ? created(current.clone()).join("") : "";
-                    result.push("<div class=\"" + classes + "\">\n                                <div class=\"vn-title\">" + current.format(displayFormat) + "</div>\n                                <div class=\"vn-childs\">" + childs + "</div>\n                            </div>");
+                    callback(current);
                     current.add(1, unit);
                 }
+            };
+            Utils.createPart = function (range, unit, displayFormat, created) {
+                var result = [""];
+                Utils.loopRange(range, unit, function (current) {
+                    var childs = created ? created(current.clone()).join("") : "";
+                    result.push("<div class=\"vn-" + unit + "\">\n                                <div class=\"vn-title\">" + current.format(displayFormat) + "</div>\n                                <div class=\"vn-childs\">" + childs + "</div>\n                            </div>");
+                });
                 return result;
             };
             Utils.createRange = function (date, unit) {
@@ -113,6 +99,59 @@ var tuna;
 (function (tuna) {
     var gantt;
     (function (gantt) {
+        var ViewWorker = /** @class */ (function () {
+            function ViewWorker(file, success, error) {
+                this.file = file;
+                this.error = error;
+                this.worker = new Worker(this.file);
+                this.worker.onmessage = function (message) { return success(message.data); };
+                if (error)
+                    this.worker.onerror = function (e) { return error(e); };
+            }
+            ViewWorker.prototype.send = function (args) {
+                this.worker.postMessage(args);
+                return this;
+            };
+            ViewWorker.prototype.stop = function () {
+                this.worker.terminate();
+            };
+            return ViewWorker;
+        }());
+        gantt.ViewWorker = ViewWorker;
+    })(gantt = tuna.gantt || (tuna.gantt = {}));
+})(tuna || (tuna = {}));
+var tuna;
+(function (tuna) {
+    var gantt;
+    (function (gantt) {
+        gantt.parts = {
+            row: {
+                onRender: function (instance, range, created) {
+                    return instance.options.data.Select(function (s) { return "<div class=\"vn-row\"></div>"; });
+                }
+            },
+            days: {
+                onRender: function (instance, range, created) {
+                    return gantt.Utils.createPart(range, "day", "DD", created);
+                }
+            },
+            weeks: {
+                onRender: function (instance, range, created) {
+                    return gantt.Utils.createPart(range, "week", "[Week] WW", created);
+                }
+            },
+            months: {
+                onRender: function (instance, range, created) {
+                    return gantt.Utils.createPart(range, "month", "MMMM YYYY", created);
+                }
+            }
+        };
+    })(gantt = tuna.gantt || (tuna.gantt = {}));
+})(tuna || (tuna = {}));
+var tuna;
+(function (tuna) {
+    var gantt;
+    (function (gantt) {
         gantt.views = {
             days: {
                 onRender: function (instance) {
@@ -120,7 +159,6 @@ var tuna;
                     function header() {
                         return [
                             "<div class=\"vn-head\">",
-                            "<div class=\"vn-tasks\"></div>",
                             gantt.parts.months.onRender(instance, range, function (current) {
                                 var range = gantt.Utils.createRange(current, "month");
                                 return gantt.parts.weeks.onRender(instance, range, function (current) {

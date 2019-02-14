@@ -8,6 +8,7 @@
     "module": "system"
   },
   "files": [
+    "./src/types/moment.d.ts",
     "./node_modules/tuna-jslinq/dist/tuna-JSLinq.d.ts"
   ],
   "include": [
@@ -15,6 +16,7 @@
   ],
   "exclude": [
     "./dist",
+    "./src/workers",
     "./node_modules"
   ]
 }

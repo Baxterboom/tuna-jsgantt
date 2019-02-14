@@ -30,14 +30,21 @@ module tuna.gantt {
             console.time("render " + view);
             this.setupRange(this.options);
 
+            const range = this.options.range;
+
             const template = views[view];
             if (!template) console.warn(`JSGantt - view ${view} does not exist`);
 
             const html = template.onRender(this);
+            const target = this.element.find(".vn-root:first");
             const element = $(html);
 
+            const day = new ViewWorker<any, string>("dist/workers/view.day.js",
+                result => target.append(result), error => console.error(error))
+                .send({ origin: document.location.origin, start: range!.start.valueOf(), end: range!.end.valueOf() });
+
             if (template.onMounted) template.onMounted(this, element);
-            this.element.find(".vn-root:first").append(element);
+            target.append(element);
             console.timeEnd("render " + view);
         }
 

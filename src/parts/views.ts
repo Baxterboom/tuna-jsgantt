@@ -12,7 +12,6 @@ module tuna.gantt {
                 function header() {
                     return [
                         `<div class="vn-head">`,
-                        `<div class="vn-tasks"></div>`,
                         parts.months.onRender(instance, range, current => {
                             const range = Utils.createRange(current, "month");
                             return parts.weeks.onRender(instance, range, current => {

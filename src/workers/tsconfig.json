@@ -1,0 +1,16 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es5",
+    "declaration": true,
+    "strict": true,
+    "module": "system"
+  },
+  "files": [
+    "../types/moment.d.ts",
+    "../../dist/tuna-jsgantt.d.ts"
+  ],
+  "include": [
+    "**/*.ts"
+  ]
+}
