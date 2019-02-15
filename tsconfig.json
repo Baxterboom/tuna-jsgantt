@@ -9,6 +9,7 @@
   },
   "files": [
     "./src/types/moment.d.ts",
+    "./dist/workers/view.day.d.ts",
     "./node_modules/tuna-jslinq/dist/tuna-JSLinq.d.ts"
   ],
   "include": [

@@ -6,16 +6,18 @@
   .vn-gantt .vn-root {
     display: flex;
     flex-direction: column;
+    justify-content: stretch;
     overflow-x: scroll; }
+  .vn-gantt .vn-row {
+    display: flex;
+    flex-direction: row; }
   .vn-gantt .vn-head {
     display: flex;
     flex-direction: row;
-    width: 100%; }
+    background: red; }
   .vn-gantt .vn-body {
     display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
+    flex-direction: column;
     background: blue; }
   .vn-gantt .vn-tasks {
     min-width: 111px;

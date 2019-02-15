@@ -8,21 +8,13 @@ module tuna.gantt {
         days: {
             onRender(instance: JSGantt): string {
                 const range = { ...instance.options.range! };
-
-                function header() {
-                    return [
-                        `<div class="vn-head">`,
-                        parts.months.onRender(instance, range, current => {
-                            const range = Utils.createRange(current, "month");
-                            return parts.weeks.onRender(instance, range, current => {
-                                const range = Utils.createRange(current, "week");
-                                return parts.days.onRender(instance, range);
-                            });
-                        }).join(""),
-                        "</div>"];
-                }
-
-                return header().join("");
+                return parts.months.onRender(instance, range, current => {
+                    const range = Utils.createRange(current, "month");
+                    return parts.weeks.onRender(instance, range, current => {
+                        const range = Utils.createRange(current, "week");
+                        return parts.days.onRender(instance, range);
+                    });
+                }).join("");
             }
         },
         weeks: {

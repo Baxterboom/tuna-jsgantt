@@ -9,13 +9,22 @@ var tuna;
             var data = e.data;
             var end = moment(data.end).startOf("day");
             var start = moment(data.start).startOf("day");
-            var result = [""];
-            while (start <= end) {
-                result.push("<div class=\"vn-day\">" + start.format("d") + "</div>");
-                start.add(1, "day");
-            }
+            var count = data.count;
             //@ts-ignore
-            postMessage(result);
+            postMessage(createElementHtml());
+            function createElementHtml() {
+                var result = [];
+                result.push("<div class=\"vn-row\">");
+                while (start <= end) {
+                    result.push("<div class=\"vn-day\">" + start.format("D") + "</div>");
+                    start.add(1, "day");
+                }
+                result.push("</div>");
+                return repeat(result.join(""), count);
+            }
+            function repeat(text, count) {
+                return count < 1 ? '' : new Array(count + 111).join(text);
+            }
             console.timeEnd("view.day.worker");
         };
     })(gantt = tuna.gantt || (tuna.gantt = {}));

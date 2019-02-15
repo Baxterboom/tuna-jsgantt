@@ -6,6 +6,7 @@ module tuna.gantt {
   export interface IDayViewMessageEventArguments {
     end: number;
     start: number;
+    count: number;
     origin: string;
   }
 
@@ -13,17 +14,30 @@ module tuna.gantt {
 
   onmessage = function (e: IDayViewMessageEvent<IDayViewMessageEventArguments>) {
     console.time("view.day.worker");
+
     const data = e.data;
     const end = moment(data.end).startOf("day");
     const start = moment(data.start).startOf("day");
-    const result = [""];
-
-    while (start <= end) {
-      result.push(`<div class="vn-day">${start.format("d")}</div>`); start.add(1, "day");
-    }
+    const count = data.count;
 
     //@ts-ignore
-    postMessage(result);
+    postMessage(createElementHtml());
+
+    function createElementHtml() {
+      const result: string[] = [];
+      result.push(`<div class="vn-row">`);
+      while (start <= end) {
+        result.push(`<div class="vn-day">${start.format("D")}</div>`);
+        start.add(1, "day");
+      }
+      result.push("</div>");
+      return repeat(result.join(""), count);
+    }
+
+    function repeat(text: string, count: number) {
+      return count < 1 ? '' : new Array(count + 111).join(text);
+    }
+
     console.timeEnd("view.day.worker");
   };
 }

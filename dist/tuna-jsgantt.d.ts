@@ -4,20 +4,16 @@ declare module tuna.gantt {
     class JSGantt {
         options: IOptions;
         private element;
+        private elements;
         constructor(element: JQuery | string, options?: IOptions);
         update(options: IOptions): void;
         render(view?: View): void;
+        private setupRows;
         private setupRange;
     }
 }
 declare module tuna.gantt {
     type View = keyof IViews;
-    interface IViewWorkerMessageEvent<T> extends MessageEvent {
-        data: T;
-    }
-    interface IViewWorkerMessageArguments {
-        instance: JSGantt;
-    }
     interface IOptions {
         data: ITask[];
         view?: View;
@@ -47,13 +43,14 @@ declare module tuna.gantt {
     }
 }
 declare module tuna.gantt {
-    interface IParts extends IViews<ITemplate> {
-        row: ITemplate;
+    class Utils {
+        static loopRange(range: IRange, unit: moment.unitOfTime.DurationConstructor, callback: (current: moment.Moment) => void): void;
+        static createPart(range: IRange, unit: moment.unitOfTime.DurationConstructor, displayFormat: string, created?: (current: moment.Moment) => string[]): string[];
+        static createRange(date: moment.Moment, unit: moment.unitOfTime.DurationConstructor): {
+            start: moment.Moment;
+            end: moment.Moment;
+        };
     }
-    interface ITemplate {
-        onRender(instance: JSGantt, range: IRange, created?: (range: moment.Moment) => string[]): string[];
-    }
-    const parts: IParts;
 }
 declare module tuna.gantt {
     class ViewWorker<TArgs, TResult> {
@@ -64,14 +61,15 @@ declare module tuna.gantt {
         send(args: TArgs): this;
         stop(): void;
     }
-    class Utils {
-        static loopRange(range: IRange, unit: moment.unitOfTime.DurationConstructor, callback: (current: moment.Moment) => void): void;
-        static createPart(range: IRange, unit: moment.unitOfTime.DurationConstructor, displayFormat: string, created?: (current: moment.Moment) => string[]): string[];
-        static createRange(date: moment.Moment, unit: moment.unitOfTime.DurationConstructor): {
-            start: moment.Moment;
-            end: moment.Moment;
-        };
+}
+declare module tuna.gantt {
+    interface IParts extends IViews<ITemplate> {
+        row: ITemplate;
     }
+    interface ITemplate {
+        onRender(instance: JSGantt, range: IRange, created?: (range: moment.Moment) => string[]): string[];
+    }
+    const parts: IParts;
 }
 declare module tuna.gantt {
     interface IViewTemplate {

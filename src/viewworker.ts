@@ -18,4 +18,4 @@ module tuna.gantt {
       this.worker.terminate();
     }
   }
-}
+} 
