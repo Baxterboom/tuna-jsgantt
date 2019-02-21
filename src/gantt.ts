@@ -21,7 +21,7 @@ module tuna.gantt {
             this.element.data("JSGantt", this);
 
             this.element.append(`
-                <div class="vn-root">
+                <div class="vn-root ${options.view}">
                     <div class="vn-head"></div>
                     <div class="vn-body"></div>
                 </div>
@@ -55,10 +55,24 @@ module tuna.gantt {
             const element = $(html);
 
             if (template.onMounted) template.onMounted(this, element);
-            this.elements.head.append(element);
+            this.elements.body.empty()
+            this.elements.head.empty().append(element);
 
             this.setupRows();
+            this.setupEvents();
             console.timeEnd("render " + view);
+        }
+
+        private setupEvents() {
+            const views: View[] = ["days", "weeks", "months", "years"];
+            const length = views.length - 1;
+            views.forEach((name, index) => {
+                const target = this.elements.head.find(".vn-" + name.slice(0, -1));
+                target.mousedown(event => {
+                    const target = event.which > 1 ? index : index - 1;
+                    this.render(views[target]);
+                });
+            })
         }
 
         private setupRows() {
@@ -66,7 +80,7 @@ module tuna.gantt {
 
             const day = new ViewWorker<IDayViewMessageEventArguments, string>(
                 "dist/workers/view.day.js",
-                result => this.elements.body.append(`${result}</vn-row>`),
+                result => this.elements.body.append(result),
                 error => console.error(error));
 
             day.send({ count: this.options.data.length, origin: document.location.origin, start: range!.start.valueOf(), end: range!.end.valueOf() });

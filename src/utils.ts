@@ -15,10 +15,9 @@ module tuna.gantt {
 
             Utils.loopRange(range, unit, current => {
                 const childs = created ? created(current.clone()).join("") : "";
-                result.push(`<div class="vn-${unit}">
-                                <div class="vn-title">${current.format(displayFormat)}</div>
-                                <div class="vn-childs">${childs}</div>
-                            </div>`);
+                const titleHtml = displayFormat ? `<div class="vn-title">${current.format(displayFormat)}</div>` : ``;
+                const childsHtml = childs ? `<div class="vn-childs">${childs}</div>` : ``;
+                result.push(`<div class="vn-${unit}">${titleHtml}${childsHtml}</div>`);
             });
 
             return result;

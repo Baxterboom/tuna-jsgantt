@@ -27,6 +27,11 @@ module tuna.gantt {
             onRender(instance: JSGantt, range: IRange, created?: (range: moment.Moment) => string[]) {
                 return Utils.createPart(range, "month", `MMMM YYYY`, created);
             }
+        },
+        years: {
+            onRender(instance: JSGantt, range: IRange, created?: (range: moment.Moment) => string[]) {
+                return Utils.createPart(range, "year", `YYYY`, created);
+            }
         }
     };
 }

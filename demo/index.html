@@ -19,10 +19,18 @@
             var options = {
                 data: createDummyData(),
                 range: {
-                    end: moment().add(5, "year"),
+                    end: moment().add(0, "year"),
                     start: moment().add(-5, "year"),
                 }
             };
+
+            $('.gantt').each(function (index, item) {
+                $(item).prepend(`<h2>${item.id}</h2>`);
+                var gantt = new tuna.gantt.JSGantt(item, $.extend({}, options, {
+                    view: item.id
+                }));
+                gantt.render();
+            });
 
             var gantt = new tuna.gantt.JSGantt("#container", options);
             gantt.render();
@@ -35,15 +43,15 @@
                         items: []
                     };
                     result.push(item);
-                    for (let u = 0; u < 100; u++) {
-                        item.items.push({
-                            id: u,
-                            range: {
-                                start: moment().add(i + u, "day"),
-                                end: moment().add(i + u + 3, "day")
-                            }
-                        });
-                    }
+                    // for (let u = 0; u < 100; u++) {
+                    //     item.items.push({
+                    //         id: u,
+                    //         range: {
+                    //             start: moment().add(i + u, "day"),
+                    //             end: moment().add(i + u + 3, "day")
+                    //         }
+                    //     });
+                    // }
                 }
                 return result;
             }
@@ -52,22 +60,24 @@
     <style>
         html,
         body {
-            margin: 10px;
+            margin: 0;
             padding: 0;
             display: block;
             height: 100%;
-            background: #cccccc;
+            background: white;
         }
 
-        body {
-            padding: 20px;
-            background: white;
+        .vn-gantt {
+            margin: 20px;
         }
     </style>
 </head>
 
 <body onload="onload()">
-    <div id="container"></div>
+    <div id="days" class="gantt"></div>
+    <div id="weeks" class="gantt"></div>
+    <div id="months" class="gantt"></div>
+    <div id="years" class="gantt"></div>
 </body>
 
 </html>

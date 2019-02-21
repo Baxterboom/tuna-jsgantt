@@ -31,5 +31,6 @@ module tuna.gantt {
         days: T;
         weeks: T;
         months: T;
+        years: T;
     }
 }

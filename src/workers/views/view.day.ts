@@ -13,7 +13,7 @@ module tuna.gantt {
   importScripts("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js");
 
   onmessage = function (e: IDayViewMessageEvent<IDayViewMessageEventArguments>) {
-    console.time("view.day.worker");
+    // console.time("view.day.worker");
 
     const data = e.data;
     const end = moment(data.end).startOf("day");
@@ -27,7 +27,8 @@ module tuna.gantt {
       const result: string[] = [];
       result.push(`<div class="vn-row">`);
       while (start <= end) {
-        result.push(`<div class="vn-day">${start.format("D")}</div>`);
+        // result.push(`<div class="vn-day">${start.format("D")}</div>`);
+        // result.push(`<div class="vn-day"></div>`);
         start.add(1, "day");
       }
       result.push("</div>");
@@ -35,9 +36,9 @@ module tuna.gantt {
     }
 
     function repeat(text: string, count: number) {
-      return count < 1 ? '' : new Array(count + 111).join(text);
+      return count < 1 ? '' : new Array(count).join(text);
     }
 
-    console.timeEnd("view.day.worker");
+    // console.timeEnd("view.day.worker");
   };
 }

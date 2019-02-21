@@ -5,7 +5,7 @@ var tuna;
     (function (gantt) {
         importScripts("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js");
         onmessage = function (e) {
-            console.time("view.day.worker");
+            // console.time("view.day.worker");
             var data = e.data;
             var end = moment(data.end).startOf("day");
             var start = moment(data.start).startOf("day");
@@ -16,16 +16,17 @@ var tuna;
                 var result = [];
                 result.push("<div class=\"vn-row\">");
                 while (start <= end) {
-                    result.push("<div class=\"vn-day\">" + start.format("D") + "</div>");
+                    // result.push(`<div class="vn-day">${start.format("D")}</div>`);
+                    // result.push(`<div class="vn-day"></div>`);
                     start.add(1, "day");
                 }
                 result.push("</div>");
                 return repeat(result.join(""), count);
             }
             function repeat(text, count) {
-                return count < 1 ? '' : new Array(count + 111).join(text);
+                return count < 1 ? '' : new Array(count).join(text);
             }
-            console.timeEnd("view.day.worker");
+            // console.timeEnd("view.day.worker");
         };
     })(gantt = tuna.gantt || (tuna.gantt = {}));
 })(tuna || (tuna = {}));

@@ -1,4 +1,6 @@
 $border-color: #eeeeee !default;
+$cellWidth: 50px;
+$rowHeight: 30px;
 
 .vn-gantt {
     display: block;
@@ -6,28 +8,21 @@ $border-color: #eeeeee !default;
     border: 1px solid $border-color;
     min-width: 333px;
 
-    .vn-root {
-        display: flex;
-        flex-direction: column;
-        justify-content: stretch;
-        overflow-x: scroll;
-    }
 
-    .vn-row {
-        display: flex;
-        flex-direction: row;
+    .vn-root {
+        display: block;
+        overflow-x: scroll;
+        border-top: 1px solid $border-color;
     }
 
     .vn-head {
-        display: flex;
-        flex-direction: row;
-        background: red;
+        display: block;
+        white-space: nowrap;
     }
 
     .vn-body {
-        display: flex;
-        flex-direction: column;
-        background: blue;
+        display: block;
+        white-space: nowrap;
     }
 
     .vn-tasks {
@@ -35,21 +30,47 @@ $border-color: #eeeeee !default;
         background: whitesmoke;
     }
 
-    .vn-month,
+    .vn-row {
+        display: block;
+        height: $rowHeight;
+    }
+
+    .vn-day,
     .vn-week,
-    .vn-day {
-        flex: 1 0 auto;
+    .vn-month,
+    .vn-year {
+        display: inline-block;
+        white-space: nowrap;
 
         .vn-title {
+
             display: block;
             padding: 5px;
             border-bottom: 1px solid $border-color;
-            border-left: 1px solid $border-color;
+            border-right: 1px solid $border-color;
+            background-image: linear-gradient(white, whitesmoke);
         }
 
         .vn-childs {
-            display: flex;
-            flex-direction: row;
+            display: inline-block;
         }
+    }
+
+    .vn-day {
+        text-align: center;
+        height: $rowHeight;
+        min-width: $cellWidth;
+    }
+
+    .vn-week {
+        min-width: 7 * $cellWidth;
+    }
+
+    .vn-month {
+        min-width: 4 * $cellWidth;
+    }
+
+    .vn-year {
+        min-width: 4 * $cellWidth;
     }
 }

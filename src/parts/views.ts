@@ -18,13 +18,27 @@ module tuna.gantt {
             }
         },
         weeks: {
-            onRender(_instance: JSGantt): string {
-                return `<h1>weeks</h1>`
+            onRender(instance: JSGantt): string {
+                const range = { ...instance.options.range! };
+                return parts.months.onRender(instance, range, current => {
+                    const range = Utils.createRange(current, "month");
+                    return parts.weeks.onRender(instance, range);
+                }).join("");
             }
         },
         months: {
-            onRender(_instance: JSGantt): string {
-                return `<h1>months</h1>`
+            onRender(instance: JSGantt): string {
+                const range = { ...instance.options.range! };
+                return parts.years.onRender(instance, range, current => {
+                    const range = Utils.createRange(current, "year");
+                    return parts.months.onRender(instance, range);
+                }).join("");
+            }
+        },
+        years: {
+            onRender(instance: JSGantt) {
+                const range = { ...instance.options.range! };
+                return parts.years.onRender(instance, range).join("");
             }
         }
     };
