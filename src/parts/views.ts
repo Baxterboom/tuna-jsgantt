@@ -1,44 +1,46 @@
 module tuna.gantt {
     export interface IViewTemplate {
-        onRender(instance: JSGantt): string;
+        onRender(instance: JSGantt): JQuery[];
         onMounted?(instance: JSGantt, element: JQuery): void;
     }
 
     export const views: IViews<IViewTemplate> = {
         days: {
-            onRender(instance: JSGantt): string {
+            onRender(instance: JSGantt) {
                 const range = { ...instance.options.range! };
-                return parts.months.onRender(instance, range, current => {
+                return parts.months(instance, range, (item: JQuery, current: moment.Moment) => {
                     const range = Utils.createRange(current, "month");
-                    return parts.weeks.onRender(instance, range, current => {
+                    return item.append(parts.weeks(instance, range, (item: JQuery, current: moment.Moment) => {
                         const range = Utils.createRange(current, "week");
-                        return parts.days.onRender(instance, range);
-                    });
-                }).join("");
+                        const days = parts.container(item => item.append(parts.days(instance, range))).addClass(`vn-header`);
+                        const columns = parts.container(item => item.append(parts.cells(instance, range, "day"))).addClass(`vn-columns`);
+                        return item.append([days, columns]).addClass(`vn-header`);
+                    })).addClass(`vn-header`);
+                });
             }
         },
         weeks: {
-            onRender(instance: JSGantt): string {
+            onRender(instance: JSGantt) {
                 const range = { ...instance.options.range! };
-                return parts.months.onRender(instance, range, current => {
+                return parts.months(instance, range, (item: JQuery, current: moment.Moment) => {
                     const range = Utils.createRange(current, "month");
-                    return parts.weeks.onRender(instance, range);
-                }).join("");
+                    return item.append(parts.weeks(instance, range));
+                });
             }
         },
         months: {
-            onRender(instance: JSGantt): string {
+            onRender(instance: JSGantt) {
                 const range = { ...instance.options.range! };
-                return parts.years.onRender(instance, range, current => {
+                return parts.years(instance, range, (item: JQuery, current: moment.Moment) => {
                     const range = Utils.createRange(current, "year");
-                    return parts.months.onRender(instance, range);
-                }).join("");
+                    return item.append(parts.months(instance, range));
+                });
             }
         },
         years: {
             onRender(instance: JSGantt) {
                 const range = { ...instance.options.range! };
-                return parts.years.onRender(instance, range).join("");
+                return parts.years(instance, range);
             }
         }
     };

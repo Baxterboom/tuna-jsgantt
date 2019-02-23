@@ -8,16 +8,19 @@ $rowHeight: 30px;
     border: 1px solid $border-color;
     min-width: 333px;
 
-
     .vn-root {
         display: block;
         overflow-x: scroll;
         border-top: 1px solid $border-color;
+        position: relative;
     }
 
     .vn-head {
         display: block;
         white-space: nowrap;
+        position: absolute;
+        bottom: 0;
+        top: 0;
     }
 
     .vn-body {
@@ -25,14 +28,22 @@ $rowHeight: 30px;
         white-space: nowrap;
     }
 
-    .vn-tasks {
-        min-width: 111px;
-        background: whitesmoke;
-    }
-
     .vn-row {
         display: block;
         height: $rowHeight;
+        border: 1px dotted $border-color
+    }
+
+    .vn-cell {
+        display: inline-block;
+        outline: 1px dotted $border-color;
+        height: 100%;
+        min-width: $cellWidth;
+    }
+
+    .vn-tasks {
+        min-width: 111px;
+        background: whitesmoke;
     }
 
     .vn-day,
@@ -41,9 +52,9 @@ $rowHeight: 30px;
     .vn-year {
         display: inline-block;
         white-space: nowrap;
+        height: 100%;
 
         .vn-title {
-
             display: block;
             padding: 5px;
             border-bottom: 1px solid $border-color;
@@ -52,7 +63,12 @@ $rowHeight: 30px;
         }
 
         .vn-childs {
-            display: inline-block;
+            display: block;
+            height: 100%;
+
+            &.vn-header {
+                height: $rowHeight;
+            }
         }
     }
 

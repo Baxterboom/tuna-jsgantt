@@ -51,25 +51,22 @@ module tuna.gantt {
             const template = views[view];
             if (!template) console.warn(`JSGantt - view ${view} does not exist`);
 
-            const html = template.onRender(this);
-            const element = $(html);
-
-            if (template.onMounted) template.onMounted(this, element);
+            const element = template.onRender(this);
             this.elements.body.empty()
             this.elements.head.empty().append(element);
+            if (template.onMounted) template.onMounted(this, this.elements.head);
 
             this.setupRows();
-            this.setupEvents();
+            // this.setupEvents();
             console.timeEnd("render " + view);
         }
 
         private setupEvents() {
             const views: View[] = ["days", "weeks", "months", "years"];
-            const length = views.length - 1;
             views.forEach((name, index) => {
                 const target = this.elements.head.find(".vn-" + name.slice(0, -1));
                 target.mousedown(event => {
-                    const target = event.which > 1 ? index : index - 1;
+                    const target = event.which == 1 ? index - 1 : index;
                     this.render(views[target]);
                 });
             })

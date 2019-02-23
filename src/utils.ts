@@ -10,14 +10,13 @@ module tuna.gantt {
             }
         }
 
-        static createPart(range: IRange, unit: moment.unitOfTime.DurationConstructor, displayFormat: string, created?: (current: moment.Moment) => string[]) {
-            const result = [""];
+        static createPart(range: IRange, unit: moment.unitOfTime.DurationConstructor, displayFormat?: string, created?: (item: JQuery, current: moment.Moment) => JQuery): JQuery[] {
+            const result: JQuery[] = [];
 
             Utils.loopRange(range, unit, current => {
-                const childs = created ? created(current.clone()).join("") : "";
                 const titleHtml = displayFormat ? `<div class="vn-title">${current.format(displayFormat)}</div>` : ``;
-                const childsHtml = childs ? `<div class="vn-childs">${childs}</div>` : ``;
-                result.push(`<div class="vn-${unit}">${titleHtml}${childsHtml}</div>`);
+                const element = $(`<div class="vn-${unit}">${titleHtml}</div>`);
+                result.push(created ? created(element, current) : element);
             });
 
             return result;

@@ -44,24 +44,22 @@ var tuna;
                 var template = gantt.views[view];
                 if (!template)
                     console.warn("JSGantt - view " + view + " does not exist");
-                var html = template.onRender(this);
-                var element = $(html);
-                if (template.onMounted)
-                    template.onMounted(this, element);
+                var element = template.onRender(this);
                 this.elements.body.empty();
                 this.elements.head.empty().append(element);
+                if (template.onMounted)
+                    template.onMounted(this, this.elements.head);
                 this.setupRows();
-                this.setupEvents();
+                // this.setupEvents();
                 console.timeEnd("render " + view);
             };
             JSGantt.prototype.setupEvents = function () {
                 var _this = this;
                 var views = ["days", "weeks", "months", "years"];
-                var length = views.length - 1;
                 views.forEach(function (name, index) {
                     var target = _this.elements.head.find(".vn-" + name.slice(0, -1));
                     target.mousedown(function (event) {
-                        var target = event.which > 1 ? index : index - 1;
+                        var target = event.which == 1 ? index - 1 : index;
                         _this.render(views[target]);
                     });
                 });
@@ -101,12 +99,11 @@ var tuna;
                 }
             };
             Utils.createPart = function (range, unit, displayFormat, created) {
-                var result = [""];
+                var result = [];
                 Utils.loopRange(range, unit, function (current) {
-                    var childs = created ? created(current.clone()).join("") : "";
                     var titleHtml = displayFormat ? "<div class=\"vn-title\">" + current.format(displayFormat) + "</div>" : "";
-                    var childsHtml = childs ? "<div class=\"vn-childs\">" + childs + "</div>" : "";
-                    result.push("<div class=\"vn-" + unit + "\">" + titleHtml + childsHtml + "</div>");
+                    var element = $("<div class=\"vn-" + unit + "\">" + titleHtml + "</div>");
+                    result.push(created ? created(element, current) : element);
                 });
                 return result;
             };
@@ -148,30 +145,33 @@ var tuna;
     var gantt;
     (function (gantt) {
         gantt.parts = {
-            row: {
-                onRender: function (instance, range, created) {
-                    return instance.options.data.Select(function (s) { return "<div class=\"vn-row\"></div>"; });
-                }
+            container: function (created) {
+                var element = $("<div class=\"vn-childs\"></div>");
+                return created ? created(element) : element;
             },
-            days: {
-                onRender: function (instance, range, created) {
-                    return gantt.Utils.createPart(range, "day", "DD", created);
-                }
+            rows: function (instance, created) {
+                var element = $(instance.options.data.Select(function (s) { return "<div class=\"vn-row\"></div>"; }));
+                return created ? created(element) : element;
             },
-            weeks: {
-                onRender: function (instance, range, created) {
-                    return gantt.Utils.createPart(range, "week", "[Week] WW", created);
-                }
+            cells: function (instance, range, unit, created) {
+                var result = [];
+                gantt.Utils.loopRange(range, unit, function (current) {
+                    var element = $("<div class=\"vn-cell\"></div>");
+                    result.push(created ? created(element, current) : element);
+                });
+                return result;
             },
-            months: {
-                onRender: function (instance, range, created) {
-                    return gantt.Utils.createPart(range, "month", "MMMM YYYY", created);
-                }
+            days: function (instance, range, created) {
+                return gantt.Utils.createPart(range, "day", "DD", created);
             },
-            years: {
-                onRender: function (instance, range, created) {
-                    return gantt.Utils.createPart(range, "year", "YYYY", created);
-                }
+            weeks: function (instance, range, created) {
+                return gantt.Utils.createPart(range, "week", "[Week] WW", created);
+            },
+            months: function (instance, range, created) {
+                return gantt.Utils.createPart(range, "month", "MMMM YYYY", created);
+            },
+            years: function (instance, range, created) {
+                return gantt.Utils.createPart(range, "year", "YYYY", created);
             }
         };
     })(gantt = tuna.gantt || (tuna.gantt = {}));
@@ -184,37 +184,39 @@ var tuna;
             days: {
                 onRender: function (instance) {
                     var range = __assign({}, instance.options.range);
-                    return gantt.parts.months.onRender(instance, range, function (current) {
+                    return gantt.parts.months(instance, range, function (item, current) {
                         var range = gantt.Utils.createRange(current, "month");
-                        return gantt.parts.weeks.onRender(instance, range, function (current) {
+                        return item.append(gantt.parts.weeks(instance, range, function (item, current) {
                             var range = gantt.Utils.createRange(current, "week");
-                            return gantt.parts.days.onRender(instance, range);
-                        });
-                    }).join("");
+                            var days = gantt.parts.container(function (item) { return item.append(gantt.parts.days(instance, range)); }).addClass("vn-header");
+                            var columns = gantt.parts.container(function (item) { return item.append(gantt.parts.cells(instance, range, "day")); }).addClass("vn-columns");
+                            return item.append([days, columns]).addClass("vn-header");
+                        })).addClass("vn-header");
+                    });
                 }
             },
             weeks: {
                 onRender: function (instance) {
                     var range = __assign({}, instance.options.range);
-                    return gantt.parts.months.onRender(instance, range, function (current) {
+                    return gantt.parts.months(instance, range, function (item, current) {
                         var range = gantt.Utils.createRange(current, "month");
-                        return gantt.parts.weeks.onRender(instance, range);
-                    }).join("");
+                        return item.append(gantt.parts.weeks(instance, range));
+                    });
                 }
             },
             months: {
                 onRender: function (instance) {
                     var range = __assign({}, instance.options.range);
-                    return gantt.parts.years.onRender(instance, range, function (current) {
+                    return gantt.parts.years(instance, range, function (item, current) {
                         var range = gantt.Utils.createRange(current, "year");
-                        return gantt.parts.months.onRender(instance, range);
-                    }).join("");
+                        return item.append(gantt.parts.months(instance, range));
+                    });
                 }
             },
             years: {
                 onRender: function (instance) {
                     var range = __assign({}, instance.options.range);
-                    return gantt.parts.years.onRender(instance, range).join("");
+                    return gantt.parts.years(instance, range);
                 }
             }
         };

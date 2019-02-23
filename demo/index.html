@@ -25,7 +25,7 @@
             };
 
             $('.gantt').each(function (index, item) {
-                $(item).prepend(`<h2>${item.id}</h2>`);
+                $(item).before(`<h2>${item.id}</h2>`);
                 var gantt = new tuna.gantt.JSGantt(item, $.extend({}, options, {
                     view: item.id
                 }));
@@ -69,6 +69,9 @@
 
         .vn-gantt {
             margin: 20px;
+            height: 211px;
+            border: 1px dashed black;
+            overflow: hidden;
         }
     </style>
 </head>
