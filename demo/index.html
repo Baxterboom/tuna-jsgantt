@@ -15,8 +15,11 @@
     <link rel="stylesheet" href="./dist/tuna-jsgantt.css">
     <script src="/dist/tuna-jsgantt.js"></script>
     <script>
+        var gantt;
+        var options;
+
         function onload() {
-            var options = {
+            options = {
                 data: createDummyData(),
                 range: {
                     end: moment().add(0, "year"),
@@ -32,7 +35,7 @@
                 gantt.render();
             });
 
-            var gantt = new tuna.gantt.JSGantt("#container", options);
+            gantt = new tuna.gantt.JSGantt("#container", options);
             gantt.render();
 
             function createDummyData() {
@@ -56,6 +59,15 @@
                 return result;
             }
         }
+
+        function update() {
+            gantt.update({
+                range: {
+                    end: moment(options.end).add(1, "year"),
+                    start: moment(options.start).add(-1, "year"),
+                }
+            })
+        }
     </script>
     <style>
         html,
@@ -69,7 +81,6 @@
 
         .vn-gantt {
             margin: 20px;
-            height: 211px;
             border: 1px dashed black;
             overflow: hidden;
         }
@@ -77,6 +88,8 @@
 </head>
 
 <body onload="onload()">
+    <button onclick="update()">Add range</button>
+
     <div id="days" class="gantt"></div>
     <div id="weeks" class="gantt"></div>
     <div id="months" class="gantt"></div>

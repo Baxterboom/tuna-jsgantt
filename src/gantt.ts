@@ -16,7 +16,7 @@ module tuna.gantt {
         private elements: IElements;
 
         constructor(element: JQuery | string, public options: IOptions = defaults) {
-            this.element = $(element);
+            this.element = $(element as string);
             this.element.addClass("vn-gantt");
             this.element.data("JSGantt", this);
 
@@ -42,6 +42,8 @@ module tuna.gantt {
                 ...this.options,
                 ...options
             };
+
+            this.render(this.options.view);
         }
 
         public render(view: View = this.options.view!) {

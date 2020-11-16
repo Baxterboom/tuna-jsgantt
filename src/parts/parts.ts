@@ -17,7 +17,7 @@ module tuna.gantt {
             return created ? created(element) : element;
         },
         rows: (instance: JSGantt, created?: (item: JQuery) => JQuery) => {
-            const element = $(instance.options.data.Select(s => `<div class="vn-row"></div>`));
+            const element = $(instance.options.data.Select(s => `<div class="vn-row"></div>`).join("\n"));
             return created ? created(element) : element;
         },
         cells: (instance: JSGantt, range: IRange, unit: unitOfTime, created?: (item: JQuery, current: moment.Moment) => JQuery) => {

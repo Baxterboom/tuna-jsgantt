@@ -2,34 +2,38 @@ const gulp = require("gulp");
 const sass = require("gulp-sass");
 const rename = require("gulp-rename");
 const bs = require("browser-sync").create();
-const ts = require('gulp-typescript');
-const tscSrc = ts.createProject('tsconfig.json');
-const tscWorkers = ts.createProject('./src/workers/tsconfig.json');
+const ts = require("gulp-typescript");
+const tscSrc = ts.createProject("tsconfig.json");
+const tscWorkers = ts.createProject("./src/workers/tsconfig.json");
 
-gulp.task("default", ["dev"]);
-gulp.task("dev", ["watch"]);
-gulp.task("build", ["sass", "ts", "ts"]);
+//https://github.com/gulpjs/undertaker-forward-reference
+const forwardReference = require("undertaker-forward-reference");
+gulp.registry(forwardReference());
 
-gulp.task('ts', ['ts-src', 'ts-workers'], function () {});
+gulp.task("default", gulp.parallel("dev"));
+gulp.task("dev", gulp.parallel("watch"));
+gulp.task("build", gulp.parallel("sass", "ts"));
 
-gulp.task('ts-src', function () {
+gulp.task("ts", gulp.series("ts-src", "ts-workers"), function () {});
+
+gulp.task("ts-src", function () {
   const prj = tscSrc.src()
     .pipe(tscSrc())
     .on("error", function () {
       console.error(arguments);
     });
 
-  return prj.js.pipe(gulp.dest('.'));
+  return prj.js.pipe(gulp.dest("."));
 });
 
-gulp.task('ts-workers', function () {
+gulp.task("ts-workers", function () {
   const prj = tscWorkers.src()
     .pipe(tscWorkers())
     .on("error", function () {
       console.error(arguments);
     });
 
-  return prj.js.pipe(gulp.dest('./dist/workers'));
+  return prj.js.pipe(gulp.dest("./dist/workers"));
 });
 
 gulp.task("sass", function () {
@@ -42,12 +46,12 @@ gulp.task("sass", function () {
     .pipe(gulp.dest("./dist"));
 });
 
-gulp.task("watch", ["ts", "sass", "bs"], function () {
+gulp.task("watch", gulp.series("ts", "sass", "bs"), function () {
   gulp.watch("./src/**/*.ts", ["ts"]);
   gulp.watch("./src/**/*.scss", ["sass"]);
 
-  gulp.watch("./dist/**/*.*").on('change', bs.reload);
-  gulp.watch("./demo/**/*.html").on('change', bs.reload);
+  gulp.watch("./dist/**/*.*").on("change", bs.reload);
+  gulp.watch("./demo/**/*.html").on("change", bs.reload);
 });
 
 gulp.task("bs", function () {

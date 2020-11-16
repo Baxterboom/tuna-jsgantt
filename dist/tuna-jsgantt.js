@@ -35,7 +35,8 @@ var tuna;
                 // this.createDummyData(); 
             }
             JSGantt.prototype.update = function (options) {
-                this.options = __assign({}, defaults, this.options, options);
+                this.options = __assign(__assign(__assign({}, defaults), this.options), options);
+                this.render(this.options.view);
             };
             JSGantt.prototype.render = function (view) {
                 if (view === void 0) { view = this.options.view; }
@@ -150,7 +151,7 @@ var tuna;
                 return created ? created(element) : element;
             },
             rows: function (instance, created) {
-                var element = $(instance.options.data.Select(function (s) { return "<div class=\"vn-row\"></div>"; }));
+                var element = $(instance.options.data.Select(function (s) { return "<div class=\"vn-row\"></div>"; }).join("\n"));
                 return created ? created(element) : element;
             },
             cells: function (instance, range, unit, created) {
