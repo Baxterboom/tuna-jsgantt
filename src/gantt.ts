@@ -17,8 +17,8 @@ module tuna.gantt {
 
         constructor(element: JQuery | string, public options: IOptions = defaults) {
             this.element = $(element as string);
-            this.element.addClass("vn-gantt");
             this.element.data("JSGantt", this);
+            this.element.addClass("vn-gantt");
 
             this.element.append(`
                 <div class="vn-root ${options.view}">

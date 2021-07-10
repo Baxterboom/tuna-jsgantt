@@ -1,1 +1,1 @@
-gulp
+npx gulp

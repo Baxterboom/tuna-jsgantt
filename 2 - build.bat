@@ -1,1 +1,1 @@
-gulp build
+npx gulp build

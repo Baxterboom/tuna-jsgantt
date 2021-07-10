@@ -13,7 +13,7 @@ module tuna.gantt {
   importScripts("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js");
 
   onmessage = function (e: IDayViewMessageEvent<IDayViewMessageEventArguments>) {
-    // console.time("view.day.worker");
+    console.time("view.day.worker");
 
     const data = e.data;
     const end = moment(data.end).startOf("day");
@@ -39,6 +39,6 @@ module tuna.gantt {
       return count < 1 ? '' : new Array(count).join(text);
     }
 
-    // console.timeEnd("view.day.worker");
+    console.timeEnd("view.day.worker");
   };
 }

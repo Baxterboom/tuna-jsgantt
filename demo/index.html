@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="./dist/tuna-jsgantt.css">
     <script src="/dist/tuna-jsgantt.js"></script>
     <script>
-        var gantt;
+        var gantt = [];
         var options;
 
         function onload() {
@@ -23,20 +23,16 @@
                 data: createDummyData(),
                 range: {
                     end: moment().add(0, "year"),
-                    start: moment().add(-5, "year"),
+                    start: moment().add(-1, "year"),
                 }
             };
 
             $('.gantt').each(function (index, item) {
                 $(item).before(`<h2>${item.id}</h2>`);
-                var gantt = new tuna.gantt.JSGantt(item, $.extend({}, options, {
-                    view: item.id
-                }));
-                gantt.render();
+                var t = new tuna.gantt.JSGantt(item, $.extend({}, options, { view: item.id}));
+                t.render();
+                gantt.push(t);
             });
-
-            gantt = new tuna.gantt.JSGantt("#container", options);
-            gantt.render();
 
             function createDummyData() {
                 var result = [];
@@ -61,12 +57,12 @@
         }
 
         function update() {
-            gantt.update({
-                range: {
-                    end: moment(options.end).add(1, "year"),
-                    start: moment(options.start).add(-1, "year"),
-                }
-            })
+            const range = options.range;
+            range.end = moment(range.end).add(1, "year");
+            range.start = moment(range.start).add(-1, "year"),
+
+            console.log("demo: range", range);
+            gantt.forEach(f => f.update({ range }));
         }
     </script>
     <style>
