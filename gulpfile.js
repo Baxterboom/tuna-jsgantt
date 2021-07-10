@@ -11,7 +11,7 @@ const forwardReference = require("undertaker-forward-reference");
 gulp.registry(forwardReference());
 
 gulp.task("default", gulp.parallel("dev"));
-gulp.task("dev", gulp.parallel("watch"));
+gulp.task("dev", gulp.series("build", gulp.parallel("watch", "bs")));
 gulp.task("build", gulp.parallel("sass", "ts"));
 
 gulp.task("ts", gulp.series("ts-src", "ts-workers"), function () {});
@@ -46,9 +46,9 @@ gulp.task("sass", function () {
     .pipe(gulp.dest("./dist"));
 });
 
-gulp.task("watch", gulp.series("ts", "sass", "bs"), function () {
-  gulp.watch("./src/**/*.ts", ["ts"]);
-  gulp.watch("./src/**/*.scss", ["sass"]);
+gulp.task("watch", function () {
+  gulp.watch("./src/**/*.ts", gulp.series("ts"));
+  gulp.watch("./src/**/*.scss", gulp.series("sass"));
 
   gulp.watch("./dist/**/*.*").on("change", bs.reload);
   gulp.watch("./demo/**/*.html").on("change", bs.reload);

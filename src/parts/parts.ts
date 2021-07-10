@@ -31,18 +31,15 @@ module tuna.gantt {
         },
         days: (instance: JSGantt, range: IRange, created?: (item: JQuery, current: moment.Moment) => JQuery) => {
             return Utils.createPart(range, "day", `DD`, created);
-
         },
         weeks: (instance: JSGantt, range: IRange, created?: (item: JQuery, current: moment.Moment) => JQuery) => {
             return Utils.createPart(range, "week", `[Week] WW`, created);
         },
         months: (instance: JSGantt, range: IRange, created?: (item: JQuery, current: moment.Moment) => JQuery) => {
             return Utils.createPart(range, "month", `MMMM YYYY`, created);
-
         },
         years: (instance: JSGantt, range: IRange, created?: (item: JQuery, current: moment.Moment) => JQuery) => {
             return Utils.createPart(range, "year", `YYYY`, created);
-
         }
     };
 }

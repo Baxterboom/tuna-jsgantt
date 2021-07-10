@@ -68,7 +68,6 @@ var tuna;
                 });
             };
             JSGantt.prototype.setupRows = function () {
-                console.log(1);
                 var range = this.options.range;
                 this.days.send({ count: this.options.data.length, origin: document.location.origin, start: range.start.valueOf(), end: range.end.valueOf() });
             };
