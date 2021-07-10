@@ -60,8 +60,6 @@
             const range = options.range;
             range.end = moment(range.end).add(1, "year");
             range.start = moment(range.start).add(-1, "year"),
-
-            console.log("demo: range", range);
             gantt.forEach(f => f.update({ range }));
         }
     </script>
@@ -79,6 +77,7 @@
             margin: 20px;
             border: 1px dashed black;
             overflow: hidden;
+            height: 15%;
         }
     </style>
 </head>

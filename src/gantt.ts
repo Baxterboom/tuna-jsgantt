@@ -14,6 +14,10 @@ module tuna.gantt {
     export class JSGantt {
         private element: JQuery;
         private elements: IElements;
+        private days = new ViewWorker<IDayViewMessageEventArguments, string>(
+                "dist/workers/view.day.js",
+                result => this.elements.body.append(result),
+                error => console.error(error));
 
         constructor(element: JQuery | string, public options: IOptions = defaults) {
             this.element = $(element as string);
@@ -59,7 +63,7 @@ module tuna.gantt {
             if (template.onMounted) template.onMounted(this, this.elements.head);
 
             this.setupRows();
-            // this.setupEvents();
+            this.setupEvents();
             console.timeEnd("render " + view);
         }
 
@@ -76,13 +80,7 @@ module tuna.gantt {
 
         private setupRows() {
             const range = this.options.range;
-
-            const day = new ViewWorker<IDayViewMessageEventArguments, string>(
-                "dist/workers/view.day.js",
-                result => this.elements.body.append(result),
-                error => console.error(error));
-
-            day.send({ count: this.options.data.length, origin: document.location.origin, start: range!.start.valueOf(), end: range!.end.valueOf() });
+            this.days.send({ count: this.options.data.length, origin: document.location.origin, start: range!.start.valueOf(), end: range!.end.valueOf() });
         }
 
         private setupRange(options: IOptions) {

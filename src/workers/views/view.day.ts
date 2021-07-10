@@ -27,8 +27,8 @@ module tuna.gantt {
       const result: string[] = [];
       result.push(`<div class="vn-row">`);
       while (start <= end) {
-        // result.push(`<div class="vn-day">${start.format("D")}</div>`);
-        // result.push(`<div class="vn-day"></div>`);
+        //result.push(`<div class="vn-day">${start.format("D")}</div>`);
+        result.push(`<div class="vn-day"></div>`);
         start.add(1, "day");
       }
       result.push("</div>");

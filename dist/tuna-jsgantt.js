@@ -21,11 +21,13 @@ var tuna;
         });
         var JSGantt = /** @class */ (function () {
             function JSGantt(element, options) {
+                var _this = this;
                 if (options === void 0) { options = defaults; }
                 this.options = options;
+                this.days = new gantt.ViewWorker("dist/workers/view.day.js", function (result) { return _this.elements.body.append(result); }, function (error) { return console.error(error); });
                 this.element = $(element);
-                this.element.addClass("vn-gantt");
                 this.element.data("JSGantt", this);
+                this.element.addClass("vn-gantt");
                 this.element.append("\n                <div class=\"vn-root " + options.view + "\">\n                    <div class=\"vn-head\"></div>\n                    <div class=\"vn-body\"></div>\n                </div>\n            ");
                 this.elements = {
                     head: this.element.find(".vn-head"),
@@ -51,7 +53,7 @@ var tuna;
                 if (template.onMounted)
                     template.onMounted(this, this.elements.head);
                 this.setupRows();
-                // this.setupEvents();
+                this.setupEvents();
                 console.timeEnd("render " + view);
             };
             JSGantt.prototype.setupEvents = function () {
@@ -66,10 +68,9 @@ var tuna;
                 });
             };
             JSGantt.prototype.setupRows = function () {
-                var _this = this;
+                console.log(1);
                 var range = this.options.range;
-                var day = new gantt.ViewWorker("dist/workers/view.day.js", function (result) { return _this.elements.body.append(result); }, function (error) { return console.error(error); });
-                day.send({ count: this.options.data.length, origin: document.location.origin, start: range.start.valueOf(), end: range.end.valueOf() });
+                this.days.send({ count: this.options.data.length, origin: document.location.origin, start: range.start.valueOf(), end: range.end.valueOf() });
             };
             JSGantt.prototype.setupRange = function (options) {
                 if (options.range)
